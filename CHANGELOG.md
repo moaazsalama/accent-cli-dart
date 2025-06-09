@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.3
+
+- Enhanced document path fetcher to match TypeScript implementation
+- Added support for name patterns when processing document paths
+- Added revisions and versions support in Project model
+- Improved language slug extraction from revisions
+- Updated Config model to include projectId
+- Fixed export command to use proper API parameters
+
 ## 0.1.2
 
 - Updated ProjectFetcher to use GraphQL instead of REST API
