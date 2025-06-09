@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+- Removed unnecessary JSON files
+- Cleaned up project structure
+- Improved documentation
+
 ## 0.1.3
 
 - Enhanced document path fetcher to match TypeScript implementation
