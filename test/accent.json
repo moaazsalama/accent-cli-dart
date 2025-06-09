@@ -1,0 +1,15 @@
+{
+  "apiUrl": "https://accent.wuilt.in",
+  "apiKey": "IBlGtcDHJ7ecA2V_2D_pDIHib1m1Zh4vueD5yQV4cy1AKeTQCZLjSN3d8Z1eAqWqmksGLoR6WuDGXPwNUEnrYUDLH5TRYQ",
+  "files": [
+    {
+      "language": "en",
+      "format": "json",
+      "source": "assets/translations/extracted_strings.json",
+      "target": "assets/translations/%slug%.json",
+      "hooks": {
+        "afterSync": "echo 'Sync completed!'"
+      }
+    }
+  ]
+}

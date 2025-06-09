@@ -1,0 +1,16 @@
+{
+  "apiUrl": "http://your.accent.instance",
+  "apiKey": "your-api-key",
+  "files": [
+    {
+      "language": "en",
+      "format": "json",
+      "source": "localization/en/*.json",
+      "target": "localization/%slug%/%original_file_name%.json",
+      "hooks": {
+        "beforeSync": "echo 'Starting sync...'",
+        "afterSync": "echo 'Sync completed!'"
+      }
+    }
+  ]
+}

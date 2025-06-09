@@ -1,0 +1,16 @@
+{
+  "hello": "Hello",
+  "welcome": "Welcome to Accent CLI",
+  "goodbye": "Goodbye",
+  "app": {
+    "title": "Test Application",
+    "description": "This is a test translation file"
+  },
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit"
+  },
+  "moaaz": "Moaaz",
+  "addedMyString": "Added my string"
+}
