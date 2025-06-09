@@ -99,9 +99,9 @@
     },
     {
       "name": "http",
-      "rootUri": "file:///Users/wuilt/.pub-cache/hosted/pub.dev/http-0.13.6",
+      "rootUri": "file:///Users/wuilt/.pub-cache/hosted/pub.dev/http-1.4.0",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "3.4"
     },
     {
       "name": "http_multi_server",
@@ -338,7 +338,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2025-06-09T12:26:33.930001Z",
+  "generated": "2025-06-09T15:43:20.357348Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/wuilt/development/flutter",

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5
+
+- Updated HTTP package dependency from ^0.13.4 to ^1.2.2
+- Improved compatibility with newer Dart SDK versions
+
 ## 0.1.4
 
 - Removed unnecessary JSON files
