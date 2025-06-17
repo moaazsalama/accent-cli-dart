@@ -2,7 +2,7 @@ import 'dart:convert';
 // import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:colorize/colorize.dart';
-
+import 'package:http/http.dart' as http;
 import '../types/config.dart';
 import '../types/project.dart';
 
@@ -13,7 +13,7 @@ class ProjectFetcher {
     final response = await _graphql(config);
 
     try {
-      final data = jsonDecode(response.data.toString());
+      final data = jsonDecode(response.body.toString());
 
       if (data['data'] == null) {
         final errorMessage =
@@ -33,7 +33,7 @@ class ProjectFetcher {
   }
 
   /// Make a GraphQL request to the Accent API
-  Future<Response> _graphql(Config config) async {
+  Future<http.Response> _graphql(Config config) async {
     final query = '''
       query ProjectDetails(\$project_id: ID!) {
         viewer {
@@ -95,16 +95,16 @@ class ProjectFetcher {
     print('Using project ID: $projectId');
 
     final Map<String, dynamic> variables = {'project_id': projectId};
-    var dio = Dio();
-    final response = await dio.post(
-      ' ${config.apiUrl}/graphql',options: Options(
+    // var dio = Dio();
+    final response = await http.post(
+      Uri.parse('${config.apiUrl}/graphql'),
+   
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${config.apiKey}',
         },
-      ),
      
-      data: jsonEncode({
+      body: jsonEncode({
         'query': query,
         'variables': variables,
       }),

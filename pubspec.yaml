@@ -1,6 +1,6 @@
 name: accent_cli_dart
 description: A Dart implementation of accent-cli for managing translations with Accent
-version: 0.1.6
+version: 0.1.7
 homepage: https://github.com/moaazsalama/accent-cli-dart
 repository: https://github.com/moaazsalama/accent-cli-dart
 issue_tracker: https://github.com/moaazsalama/accent-cli-dart/issues

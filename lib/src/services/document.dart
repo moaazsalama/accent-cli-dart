@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:glob/glob.dart';
 import 'package:glob/list_local_fs.dart';
 import 'package:http/http.dart' as http;
@@ -12,13 +13,13 @@ import '../types/document_config.dart';
 class Document {
   /// The file configuration for this document
   final FileConfig config;
-  
+
   /// The API URL
   final String apiUrl;
-  
+
   /// The API key
   final String apiKey;
-  
+
   /// The list of file paths matching the source pattern
   List<String> paths = [];
 
@@ -42,7 +43,8 @@ class Document {
   }
 
   /// Syncs the document with the Accent API
-  Future<DocumentOperations> sync(String filePath, Map<String, dynamic> flags) async {
+  Future<DocumentOperations> sync(
+      String filePath, Map<String, dynamic> flags) async {
     try {
       print('Starting sync for file: $filePath');
       final file = File(filePath);
@@ -54,10 +56,10 @@ class Document {
       print('File content length: ${fileContent.length} bytes');
       final syncType = flags['sync-type'] ?? 'smart';
       print('Using sync_type: $syncType');
-      
+
       final url = '$apiUrl/sync';
       print('Sending request to: $url');
-      
+
       final request = http.MultipartRequest('POST', Uri.parse(url))
         ..headers.addAll({
           'Authorization': 'Bearer $apiKey',
@@ -66,9 +68,9 @@ class Document {
         ..fields['sync_type'] = syncType
         ..fields['document_format'] = config.format
         ..fields['language'] = config.language;
-        
+
       print('Request fields: ${request.fields}');
-      
+
       // Add the file
       request.files.add(
         http.MultipartFile.fromString(
@@ -77,26 +79,29 @@ class Document {
           filename: path.basename(filePath),
         ),
       );
-      
+
       print('Sending request with ${request.files.length} files');
       final response = await request.send();
       print('Response status: ${response.statusCode}');
       print('Response headers: ${response.headers}');
-      
+
       final responseData = await response.stream.bytesToString();
       print('Response data: $responseData');
-     
-      
+
       // Try to parse the response data if it's not empty
       Map<String, dynamic> jsonResponse;
       try {
-        jsonResponse = responseData.isEmpty?{}: jsonDecode(responseData) as Map<String, dynamic>;
+        jsonResponse = responseData.isEmpty
+            ? {}
+            : jsonDecode(responseData) as Map<String, dynamic>;
       } catch (parseError) {
-        throw Exception('Failed to parse response: $parseError\nResponse was: $responseData');
+        throw Exception(
+            'Failed to parse response: $parseError\nResponse was: $responseData');
       }
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to sync: ${response.statusCode} - ${jsonResponse['error'] ?? 'Unknown error'}');
+        throw Exception(
+            'Failed to sync: ${response.statusCode} - ${jsonResponse['error'] ?? 'Unknown error'}');
       }
 
       return DocumentOperations(
@@ -124,7 +129,7 @@ class Document {
 
       final fileContent = file.readAsStringSync();
       final mergeType = flags['merge-type'] ?? 'smart';
-      
+
       final url = '$apiUrl/add-translations';
       final request = http.MultipartRequest('POST', Uri.parse(url))
         ..headers.addAll({
@@ -160,7 +165,7 @@ class Document {
   }
 
   /// Exports the document from Accent
-  Future<void>  export(
+  Future<void> export(
     String targetPath,
     String language,
     String documentPath,
@@ -173,48 +178,53 @@ class Document {
       print('- Language: $language');
       print('- Document path: $documentPath');
       print('- Format: ${config.format}');
-      
+
       final orderBy = flags['order-by'] ?? 'index';
       print('- Order by: $orderBy');
-      
+
       // Make sure target path has a valid filename
-      if (path.basename(targetPath).isEmpty || path.basename(targetPath) == '.json') {
+      if (path.basename(targetPath).isEmpty ||
+          path.basename(targetPath) == '.json') {
         targetPath = path.join(path.dirname(targetPath), '$language.json');
         print('Fixed target path to: $targetPath');
       }
-      
+
       final url = '$apiUrl/export';
       print('Sending request to: $url');
-      
-      final queryParams = {'project_id': projectId,
+
+      final queryParams = {
+        'project_id': projectId,
         'inline_render': "true",
-        if(documentPath.isNotEmpty) 'document_path': documentPath,
-        if(language.isNotEmpty) 'language': language,
-        if(orderBy.isNotEmpty) 'order_by': orderBy,
-        if(config.format.isNotEmpty) 'document_format': config.format,
-        
+        if (documentPath.isNotEmpty) 'document_path': documentPath,
+        if (language.isNotEmpty) 'language': language,
+        if (orderBy.isNotEmpty) 'order_by': orderBy,
+        if (config.format.isNotEmpty) 'document_format': config.format,
       };
       print('Query parameters: $queryParams');
       final uri = Uri.parse(url).replace(queryParameters: queryParams);
       print('Final URL: $uri');
-    
-      
-      final response = await http.get(
-        uri,
-        // headers: {
-        //   'Authorization': 'Bearer $apiKey',
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/json',
-        // },
-      );
-        //print cURL  
-        print(response.request?.headers);
+
+      var dio = Dio();
+      final response = await dio.get(url, queryParameters: queryParams,
+      options: Options(
+              headers: {
+                'Authorization': 'Bearer $apiKey',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+      )
+         
+          );
+      //print cURL
+      // print(response.request?.headers);
       print('Response status: ${response.statusCode}');
       print('Response headers: ${response.headers}');
-      print('Response body preview: ${response.body.length > 100 ? response.body.substring(0, 100) + '...' : response.body}');
+      // print(
+          // 'Response body preview: ${response.body.length > 100 ? response.body.substring(0, 100) + '...' : response.body}');
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to export: ${response.statusCode}\nResponse: ${response.body}');
+        throw Exception(
+            'Failed to export: ${response.statusCode}\nResponse: ${response.data}');
       }
 
       // Ensure the directory exists
@@ -227,7 +237,7 @@ class Document {
       // Write the content to the target file
       print('Writing content to file: $targetPath');
       final file = File(targetPath);
-      await file.writeAsString(response.body);
+      await file.writeAsString(response.data.toString());
       print('Successfully exported to: $targetPath');
     } catch (e) {
       print('Export error: $e');

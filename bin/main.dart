@@ -10,7 +10,7 @@ void main(List<String> arguments) async {
   
   try {
     print('Running command: $arguments');
-    await cli.run([ ...arguments]);
+    await cli.run([...arguments]);
   } catch (e) {
     print('Error running command: $e');
     exit(1);
