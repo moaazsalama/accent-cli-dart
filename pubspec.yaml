@@ -15,6 +15,7 @@ executables:
 dependencies:
   args: ^2.3.0
   http: ^1.2.2
+  dio: ^5.8.0+1
   yaml: ^3.1.0
   path: ^1.8.0
   glob: ^2.0.2

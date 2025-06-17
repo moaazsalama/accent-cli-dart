@@ -80,6 +80,18 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "dio",
+      "rootUri": "file:///Users/wuilt/.pub-cache/hosted/pub.dev/dio-5.8.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "dio_web_adapter",
+      "rootUri": "file:///Users/wuilt/.pub-cache/hosted/pub.dev/dio_web_adapter-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "file",
       "rootUri": "file:///Users/wuilt/.pub-cache/hosted/pub.dev/file-7.0.1",
       "packageUri": "lib/",
@@ -338,7 +350,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2025-06-09T15:43:20.357348Z",
+  "generated": "2025-06-17T14:03:07.664010Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/wuilt/development/flutter",

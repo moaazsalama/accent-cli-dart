@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:colorize/colorize.dart';
 
 import '../types/config.dart';
@@ -12,7 +13,7 @@ class ProjectFetcher {
     final response = await _graphql(config);
 
     try {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(response.data.toString());
 
       if (data['data'] == null) {
         final errorMessage =
@@ -32,7 +33,7 @@ class ProjectFetcher {
   }
 
   /// Make a GraphQL request to the Accent API
-  Future<http.Response> _graphql(Config config) async {
+  Future<Response> _graphql(Config config) async {
     final query = '''
       query ProjectDetails(\$project_id: ID!) {
         viewer {
@@ -82,28 +83,28 @@ class ProjectFetcher {
         }
       }
     ''';
-    
+
     // Extract project ID from the API key or config
     // For Accent, we need the project ID to query the data
     String projectId = '1'; // Default project ID
-    
+
     // Try to extract project ID from API key or URL parameters if available
     projectId = config.projectId;
-    
+
     // Log what we're using
     print('Using project ID: $projectId');
-    
-    final Map<String, dynamic> variables = {
-      'project_id': projectId
-    };
 
-    final response = await http.post(
-      Uri.parse('${config.apiUrl}/graphql'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${config.apiKey}',
-      },
-      body: jsonEncode({
+    final Map<String, dynamic> variables = {'project_id': projectId};
+    var dio = Dio();
+    final response = await dio.post(
+      ' ${config.apiUrl}/graphql',options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${config.apiKey}',
+        },
+      ),
+     
+      data: jsonEncode({
         'query': query,
         'variables': variables,
       }),

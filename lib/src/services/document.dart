@@ -160,7 +160,7 @@ class Document {
   }
 
   /// Exports the document from Accent
-  Future<void> export(
+  Future<void>  export(
     String targetPath,
     String language,
     String documentPath,
